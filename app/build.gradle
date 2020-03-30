@@ -34,4 +34,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation project(":androidx3dh")
+    implementation "com.goterl.lazycode:lazysodium-android:4.1.0@aar"
+    implementation 'net.java.dev.jna:jna:5.5.0@aar'
 }
