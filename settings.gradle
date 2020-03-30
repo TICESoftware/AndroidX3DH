@@ -1,0 +1,3 @@
+rootProject.name='AndroidX3DHApp'
+include ':app'
+include ':androidx3dh'
