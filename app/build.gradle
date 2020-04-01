@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlinx-serialization'
 
 android {
     compileSdkVersion 29
@@ -37,4 +38,6 @@ dependencies {
     implementation project(":androidx3dh")
     implementation "com.goterl.lazycode:lazysodium-android:4.1.0@aar"
     implementation 'net.java.dev.jna:jna:5.5.0@aar'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // or "kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0" // JVM dependency
 }
