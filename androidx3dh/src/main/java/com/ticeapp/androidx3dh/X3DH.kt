@@ -97,7 +97,7 @@ class X3DH {
         side: Side,
         info: String
     ): ByteArray {
-        var input = ByteArray(32) { Byte.MAX_VALUE }
+        var input = ByteArray(32) { -1 }
         input += side.calculateSessionKey(DH1.ownKeyPair, DH1.remotePublicKey)
         input += side.calculateSessionKey(DH2.ownKeyPair, DH2.remotePublicKey)
         input += side.calculateSessionKey(DH3.ownKeyPair, DH3.remotePublicKey)
