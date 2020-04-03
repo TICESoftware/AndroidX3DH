@@ -1,6 +1,6 @@
 # AndroidX3DH
 
-This package implements the <a href="https://signal.org/docs/specifications/x3dh/">X3DH</a> key agreement protocol in Swift. The cryptographic operations are provided by <a href="https://github.com/jedisct1/libsodium">libsodium</a> entirely.
+This package implements the <a href="https://signal.org/docs/specifications/x3dh/">X3DH</a> key agreement protocol in Swift. The cryptographic operations are provided by <a href="https://github.com/jedisct1/libsodium">libsodium</a> entirely. Libsodium is integrated via <a href="https://github.com/terl/lazysodium-android.git">Lazysodium</a>.
 
 ## Installation
 
