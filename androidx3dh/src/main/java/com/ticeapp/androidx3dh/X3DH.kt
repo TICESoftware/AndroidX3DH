@@ -2,7 +2,6 @@ package com.ticeapp.androidx3dh
 
 import com.goterl.lazycode.lazysodium.LazySodiumAndroid
 import com.goterl.lazycode.lazysodium.SodiumAndroid
-import com.goterl.lazycode.lazysodium.interfaces.KeyExchange
 import com.goterl.lazycode.lazysodium.utils.Key
 import com.goterl.lazycode.lazysodium.utils.KeyPair
 import com.ticeapp.androidhkdf.deriveHKDFKey
@@ -19,17 +18,9 @@ class X3DH(sodium: LazySodiumAndroid? = null) {
     class KeyAgreementInitiation(val sharedSecret: ByteArray, val associatedData: ByteArray, val ephemeralPublicKey: Key)
     private class DH(val ownKeyPair: KeyPair, val remotePublicKey: Key)
 
-    private interface DHCalculator {
-        fun calculateSessionKey(ownKeyPair: KeyPair, remotePublicKey: Key): ByteArray
-    }
-
-    private enum class Side : DHCalculator {
-        INITIATING {
-            override fun calculateSessionKey(ownKeyPair: KeyPair, remotePublicKey: Key): ByteArray = LazySodiumAndroid(SodiumAndroid()).cryptoKxClientSessionKeys(ownKeyPair.publicKey, ownKeyPair.secretKey, remotePublicKey).rx
-        },
-        RESPONDING {
-            override fun calculateSessionKey(ownKeyPair: KeyPair, remotePublicKey: Key): ByteArray = LazySodiumAndroid(SodiumAndroid()).cryptoKxServerSessionKeys(ownKeyPair.publicKey, ownKeyPair.secretKey, remotePublicKey).tx
-        }
+    private enum class Side {
+        INITIATING,
+        RESPONDING
     }
 
     fun generateIdentityKeyPair(): KeyPair = sodium.cryptoKxKeypair()
@@ -98,16 +89,23 @@ class X3DH(sodium: LazySodiumAndroid? = null) {
         info: String
     ): ByteArray {
         var input = ByteArray(32) { -1 }
-        input += side.calculateSessionKey(DH1.ownKeyPair, DH1.remotePublicKey)
-        input += side.calculateSessionKey(DH2.ownKeyPair, DH2.remotePublicKey)
-        input += side.calculateSessionKey(DH3.ownKeyPair, DH3.remotePublicKey)
+        input += calculateSessionKey(DH1.ownKeyPair, DH1.remotePublicKey, side)
+        input += calculateSessionKey(DH2.ownKeyPair, DH2.remotePublicKey, side)
+        input += calculateSessionKey(DH3.ownKeyPair, DH3.remotePublicKey, side)
 
         if (DH4 != null) {
-            input += side.calculateSessionKey(DH4.ownKeyPair, DH4.remotePublicKey)
+            input += calculateSessionKey(DH4.ownKeyPair, DH4.remotePublicKey, side)
         }
 
         val salt = ByteArray(32)
 
         return deriveHKDFKey(ikm = input, salt = salt, info = info, L = 32, sodium = sodium)
+    }
+
+    private fun calculateSessionKey(ownKeyPair: KeyPair, remotePublicKey: Key, side: Side): ByteArray {
+        return when(side) {
+            Side.INITIATING -> sodium.cryptoKxClientSessionKeys(ownKeyPair.publicKey, ownKeyPair.secretKey, remotePublicKey).rx
+            Side.RESPONDING -> sodium.cryptoKxServerSessionKeys(ownKeyPair.publicKey, ownKeyPair.secretKey, remotePublicKey).tx
+        }
     }
 }
