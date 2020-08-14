@@ -12,8 +12,8 @@ typealias Signature = ByteArray
 typealias PrekeySigner = (Key) -> Signature
 typealias PrekeySignatureVerifier = (Signature) -> Boolean
 
-class X3DH {
-    private val sodium = LazySodiumAndroid(SodiumAndroid()) as KeyExchange.Lazy
+class X3DH(sodium: LazySodiumAndroid? = null) {
+    private val sodium = sodium ?: LazySodiumAndroid(SodiumAndroid())
 
     class SignedPrekeyPair(val keyPair: KeyPair, val signature: ByteArray)
     class KeyAgreementInitiation(val sharedSecret: ByteArray, val associatedData: ByteArray, val ephemeralPublicKey: Key)
@@ -108,6 +108,6 @@ class X3DH {
 
         val salt = ByteArray(32)
 
-        return deriveHKDFKey(ikm = input, salt = salt, info = info, L = 32)
+        return deriveHKDFKey(ikm = input, salt = salt, info = info, L = 32, sodium = sodium)
     }
 }
