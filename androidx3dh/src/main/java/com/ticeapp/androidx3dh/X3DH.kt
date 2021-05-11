@@ -1,9 +1,9 @@
 package com.ticeapp.androidx3dh
 
-import com.goterl.lazycode.lazysodium.LazySodiumAndroid
-import com.goterl.lazycode.lazysodium.SodiumAndroid
-import com.goterl.lazycode.lazysodium.utils.Key
-import com.goterl.lazycode.lazysodium.utils.KeyPair
+import com.goterl.lazysodium.LazySodiumAndroid
+import com.goterl.lazysodium.SodiumAndroid
+import com.goterl.lazysodium.utils.Key
+import com.goterl.lazysodium.utils.KeyPair
 import com.ticeapp.androidhkdf.deriveHKDFKey
 import java.security.SignatureException
 
